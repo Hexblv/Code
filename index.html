@@ -3,419 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>996hrs.net | Work-Life Balance Calculator</title>
+    <title>Portfolio | Visual Storyteller</title>
     <style>
+        /* --- 1. Variables & Reset --- */
         :root {
-            --primary: #ff4757;
-            --secondary: #2f3542;
-            --accent: #5352ed;
-            --bg: #f1f2f6;
-            --card-bg: #ffffff;
-            --text: #2f3542;
+            --bg-color: #f1f2f6;       /* Light Grey from 996hrs */
+            --text-color: #2f3542;     /* Dark Grey High Contrast */
             --text-light: #747d8c;
-            --success: #2ed573;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #1e272e;
-                --card-bg: #2f3542;
-                --text: #f1f2f6;
-                --text-light: #a4b0be;
-                --secondary: #57606f;
-            }
+            --primary: #ff4757;        /* Vibrant Accent */
+            --primary-hover: #ff6b81;
+            --card-bg: #ffffff;
+            --gap: 20px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
-            transition: background 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* --- 2. Layout Containers --- */
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
+        /* --- 3. Hero Section --- */
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-top: 20px;
+            padding: 100px 20px 60px;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        h1 span {
-            color: var(--primary);
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+            color: var(--text-color);
         }
 
         .subtitle {
+            font-size: 1.2rem;
             color: var(--text-light);
-            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media(min-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        h2 {
-            font-size: 1.25rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 10px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
+        .btn-hire {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 30px;
             font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-hire:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        /* --- 4. Masonry Grid --- */
+        .gallery-wrapper {
+            padding-bottom: 80px;
+        }
+
+        .masonry {
+            column-count: 3; /* Desktop default */
+            column-gap: var(--gap);
+        }
+
+        .photo-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: var(--gap);
+            break-inside: avoid; /* Prevents cutting cards in half */
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transform: translateZ(0); /* Hardware acceleration fix */
+            cursor: pointer;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        /* Hover Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .overlay-text {
+            color: white;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .overlay-text h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .overlay-text p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Hover Interaction */
+        .photo-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-card:hover .overlay {
+            opacity: 1;
+        }
+
+        .photo-card:hover .overlay-text {
+            transform: translateY(0);
+        }
+
+        /* --- 5. Footer --- */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-light);
             font-size: 0.9rem;
         }
 
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--secondary);
-            background: var(--bg);
-            color: var(--text);
-            border-radius: 6px;
-            font-size: 1rem;
+        .social-links {
+            margin-top: 10px;
         }
 
-        input:focus {
-            outline: 2px solid var(--accent);
-            border-color: transparent;
+        .social-links a {
+            color: var(--text-color);
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .result-box {
-            background: var(--bg);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .result-value {
-            font-size: 2rem;
-            font-weight: 700;
+        .social-links a:hover {
             color: var(--primary);
         }
 
-        .result-label {
-            font-size: 0.9rem;
-            color: var(--text-light);
+        /* --- 6. Responsiveness --- */
+        @media (max-width: 900px) {
+            .masonry {
+                column-count: 2;
+            }
         }
 
-        .comparison {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .comp-item strong {
-            display: block;
-            font-size: 1.2rem;
-        }
-
-        /* Visualization Bar */
-        .bar-container {
-            height: 30px;
-            background: var(--secondary);
-            border-radius: 15px;
-            overflow: hidden;
-            display: flex;
-            margin: 20px 0;
-        }
-
-        .bar-segment {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            color: white;
-            font-weight: bold;
-            transition: width 0.5s ease;
-        }
-
-        .seg-work { background: var(--primary); }
-        .seg-sleep { background: var(--accent); }
-        .seg-life { background: var(--success); }
-
-        .legend {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-light);
-            font-size: 0.8rem;
-        }
-
-        .badge {
-            background: var(--primary);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            vertical-align: middle;
-            margin-left: 5px;
+        @media (max-width: 600px) {
+            .masonry {
+                column-count: 1;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
-        <h1>996<span>hrs</span>.net</h1>
-        <p class="subtitle">The True Cost of the 996 Work Culture</p>
+        <div class="container">
+            <h1>Through The Lens</h1>
+            <p class="subtitle">
+                Capturing light, shadow, and the human experience. 
+                Based in Tokyo, available worldwide.
+            </p>
+            <a href="mailto:hello@example.com" class="btn-hire">Hire Me</a>
+        </div>
     </header>
 
-    <div class="grid">
-        <!-- Input Section -->
-        <div class="card">
-            <h2>⚙️ Work Configuration</h2>
+    <main class="container gallery-wrapper">
+        <div class="masonry">
             
-            <div class="input-group">
-                <label>Monthly Salary (Currency)</label>
-                <input type="number" id="salary" value="10000" placeholder="e.g. 10000">
+            <!-- Item 1 (Portrait) -->
+            <div class="photo-card">
+                <!-- Using picsum for placeholders with different aspect ratios -->
+                <img src="https://picsum.photos/600/800?random=1" alt="Portrait">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Urban Solitude</h3>
+                        <p>Sony A7III • 85mm</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Start Time</label>
-                <input type="time" id="startTime" value="09:00">
+            <!-- Item 2 (Landscape) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/400?random=2" alt="Landscape">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Golden Hour</h3>
+                        <p>DJI Mavic 3 • f/2.8</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>End Time</label>
-                <input type="time" id="endTime" value="21:00">
+            <!-- Item 3 (Square) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/600?random=3" alt="Architecture">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Geometric Lines</h3>
+                        <p>Fujifilm XT-4 • 35mm</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Days per Week</label>
-                <select id="daysPerWeek">
-                    <option value="5">5 Days (955)</option>
-                    <option value="6" selected>6 Days (996)</option>
-                    <option value="7">7 Days (007)</option>
-                </select>
+            <!-- Item 4 (Tall) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/900?random=4" alt="Street">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Night Market</h3>
+                        <p>Leica Q2 • ISO 3200</p>
+                    </div>
+                </div>
             </div>
-            
-            <div class="input-group">
-                <label>Commute Time (Daily, Minutes)</label>
-                <input type="number" id="commute" value="60">
+
+            <!-- Item 5 (Landscape) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/450?random=5" alt="Nature">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Morning Fog</h3>
+                        <p>Canon R5 • 24-70mm</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 6 (Portrait) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/750?random=6" alt="Fashion">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Studio Session</h3>
+                        <p>Hasselblad • 80mm</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 7 (Wide) -->
+            <div class="photo-card">
+                <img src="https://picsum.photos/600/350?random=7" alt="Travel">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>The Long Road</h3>
+                        <p>Sony A7C • 50mm</p>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Item 8 (Standard) -->
+             <div class="photo-card">
+                <img src="https://picsum.photos/600/500?random=8" alt="Abstract">
+                <div class="overlay">
+                    <div class="overlay-text">
+                        <h3>Neon Reflections</h3>
+                        <p>Ricoh GR III</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Your Name Photography. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">Unsplash</a>
             </div>
         </div>
+    </footer>
 
-        <!-- Hourly Rate Result -->
-        <div class="card">
-            <h2>💰 Real Hourly Wage</h2>
-            <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px;">
-                Companies often hide low hourly rates behind "high" monthly salaries.
-            </p>
-
-            <div class="result-box">
-                <div class="result-value" id="realHourly">0.00</div>
-                <div class="result-label">Your Real Hourly Rate</div>
-            </div>
-
-            <div class="comparison">
-                <div class="comp-item">
-                    <span>Standard (40h) Rate</span>
-                    <strong id="standardHourly" style="color: var(--success)">0.00</strong>
-                </div>
-                <div class="comp-item" style="text-align: right;">
-                    <span>Devaluation</span>
-                    <strong id="devaluation" style="color: var(--primary)">-0%</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- Time Visualization -->
-        <div class="card full-width">
-            <h2>⏳ Your Life This Week <span class="badge" id="scheduleBadge">996</span></h2>
-            
-            <div class="legend">
-                <span><span class="dot" style="background:var(--primary)"></span>Work</span>
-                <span><span class="dot" style="background:var(--accent)"></span>Sleep (8h)</span>
-                <span><span class="dot" style="background:var(--success)"></span>Free Time</span>
-            </div>
-
-            <div class="bar-container">
-                <div class="bar-segment seg-work" id="barWork" style="width: 42%">42%</div>
-                <div class="bar-segment seg-sleep" id="barSleep" style="width: 33%">33%</div>
-                <div class="bar-segment seg-life" id="barLife" style="width: 25%">25%</div>
-            </div>
-
-            <div class="comparison">
-                <div class="comp-item">
-                    <strong><span id="totalWorkHours">72</span> hrs</strong>
-                    <span>Total Work/Commute</span>
-                </div>
-                <div class="comp-item" style="text-align: center;">
-                    <strong><span id="totalFreeHours">40</span> hrs</strong>
-                    <span>True Free Time</span>
-                </div>
-                <div class="comp-item" style="text-align: right;">
-                    <strong><span id="lifeLost">42</span>%</strong>
-                    <span>of Week Consumed</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Info Card -->
-        <div class="card full-width">
-            <h2>🚑 The 996.ICU Concept</h2>
-            <p>
-                "996" refers to working from <strong>9:00 am</strong> to <strong>9:00 pm</strong>, <strong>6 days</strong> a week. 
-                <br><br>
-                Developers created the rhyme <em>"Work 996, sick in ICU"</em> to protest these brutal schedules. 
-                While a 996 schedule creates a 72-hour work week, labor laws in many places dictate a standard 40-44 hour week. 
-                Use this tool to see how much your time is actually being valued compared to a standard 9-5 job.
-            </p>
-        </div>
-    </div>
-
-    <div class="footer">
-        &copy; 2025 996hrs.net | Generated for Educational Purposes
-    </div>
-</div>
-
-<script>
-    const inputs = document.querySelectorAll('input, select');
-    
-    // Config
-    const HOURS_IN_WEEK = 168;
-    const SLEEP_HOURS_DAY = 8;
-    const SLEEP_WEEK = SLEEP_HOURS_DAY * 7;
-    const WEEKS_IN_MONTH = 4.345; // Average weeks in a month
-
-    function calculate() {
-        // Get values
-        const salary = parseFloat(document.getElementById('salary').value) || 0;
-        const startTime = document.getElementById('startTime').value;
-        const endTime = document.getElementById('endTime').value;
-        const days = parseInt(document.getElementById('daysPerWeek').value);
-        const commuteMinutes = parseFloat(document.getElementById('commute').value) || 0;
-
-        // Parse Time
-        const start = new Date("01/01/2000 " + startTime);
-        const end = new Date("01/01/2000 " + endTime);
-        
-        let dailyWorkHours = (end - start) / 1000 / 60 / 60;
-        if (dailyWorkHours < 0) dailyWorkHours += 24; // Handle overnight
-
-        // Calculations
-        const weeklyWorkHours = dailyWorkHours * days;
-        const weeklyCommuteHours = (commuteMinutes / 60) * days;
-        const totalCommittedTime = weeklyWorkHours + weeklyCommuteHours;
-        
-        const monthlyWorkHours = weeklyWorkHours * WEEKS_IN_MONTH;
-
-        // Hourly Rates
-        const realHourlyRate = monthlyWorkHours > 0 ? (salary / monthlyWorkHours) : 0;
-        
-        // Standard comparison (40h week)
-        const standardMonthlyHours = 40 * WEEKS_IN_MONTH;
-        const standardHourlyRate = salary / standardMonthlyHours;
-        
-        const devaluation = standardHourlyRate > 0 
-            ? ((standardHourlyRate - realHourlyRate) / standardHourlyRate) * 100 
-            : 0;
-
-        // Visualization Data
-        const pctWork = (totalCommittedTime / HOURS_IN_WEEK) * 100;
-        const pctSleep = (SLEEP_WEEK / HOURS_IN_WEEK) * 100;
-        let pctLife = 100 - pctWork - pctSleep;
-        if(pctLife < 0) pctLife = 0; // Sanity check
-
-        // Update UI
-        document.getElementById('realHourly').innerText = realHourlyRate.toFixed(2);
-        document.getElementById('standardHourly').innerText = standardHourlyRate.toFixed(2);
-        document.getElementById('devaluation').innerText = "-" + devaluation.toFixed(1) + "%";
-
-        document.getElementById('totalWorkHours').innerText = totalCommittedTime.toFixed(1);
-        document.getElementById('totalFreeHours').innerText = ((pctLife / 100) * HOURS_IN_WEEK).toFixed(1);
-        document.getElementById('lifeLost').innerText = pctWork.toFixed(1);
-
-        // Update Bars
-        document.getElementById('barWork').style.width = pctWork + "%";
-        document.getElementById('barWork').innerText = Math.round(pctWork) + "%";
-        
-        document.getElementById('barSleep').style.width = pctSleep + "%";
-        document.getElementById('barSleep').innerText = Math.round(pctSleep) + "%";
-        
-        document.getElementById('barLife').style.width = pctLife + "%";
-        document.getElementById('barLife').innerText = Math.round(pctLife) + "%";
-
-        // Badge update
-        let badgeText = "Standard";
-        if(weeklyWorkHours > 60) badgeText = "996 / ICU";
-        else if(weeklyWorkHours > 45) badgeText = "Overtime";
-        document.getElementById('scheduleBadge').innerText = badgeText;
-        
-        // Color shifts based on severity
-        const rVal = document.getElementById('realHourly');
-        if(devaluation > 30) rVal.style.color = "#ff4757"; // Bad
-        else rVal.style.color = "#2ed573"; // Good
-    }
-
-    // Event Listeners
-    inputs.forEach(input => {
-        input.addEventListener('input', calculate);
-    });
-
-    // Initial run
-    calculate();
-</script>
+    <!-- Optional: Simple script to handle 'empty' clicks or future expansion -->
+    <script>
+        document.querySelectorAll('.photo-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // Here you could add a Lightbox feature later
+                console.log('Image clicked');
+            });
+        });
+    </script>
 
 </body>
 </html>
