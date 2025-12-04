@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>996hrs.net | Work-Life Balance Calculator</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #2f3542;
+            --accent: #5352ed;
+            --bg: #f1f2f6;
+            --card-bg: #ffffff;
+            --text: #2f3542;
+            --text-light: #747d8c;
+            --success: #2ed573;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1e272e;
+                --card-bg: #2f3542;
+                --text: #f1f2f6;
+                --text-light: #a4b0be;
+                --secondary: #57606f;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media(min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--secondary);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: 2px solid var(--accent);
+            border-color: transparent;
+        }
+
+        .result-box {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .comparison {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .comp-item strong {
+            display: block;
+            font-size: 1.2rem;
+        }
+
+        /* Visualization Bar */
+        .bar-container {
+            height: 30px;
+            background: var(--secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            margin: 20px 0;
+        }
+
+        .bar-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        .seg-work { background: var(--primary); }
+        .seg-sleep { background: var(--accent); }
+        .seg-life { background: var(--success); }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>996<span>hrs</span>.net</h1>
+        <p class="subtitle">The True Cost of the 996 Work Culture</p>
+    </header>
+
+    <div class="grid">
+        <!-- Input Section -->
+        <div class="card">
+            <h2>⚙️ Work Configuration</h2>
+            
+            <div class="input-group">
+                <label>Monthly Salary (Currency)</label>
+                <input type="number" id="salary" value="10000" placeholder="e.g. 10000">
+            </div>
+
+            <div class="input-group">
+                <label>Start Time</label>
+                <input type="time" id="startTime" value="09:00">
+            </div>
+
+            <div class="input-group">
+                <label>End Time</label>
+                <input type="time" id="endTime" value="21:00">
+            </div>
+
+            <div class="input-group">
+                <label>Days per Week</label>
+                <select id="daysPerWeek">
+                    <option value="5">5 Days (955)</option>
+                    <option value="6" selected>6 Days (996)</option>
+                    <option value="7">7 Days (007)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Commute Time (Daily, Minutes)</label>
+                <input type="number" id="commute" value="60">
+            </div>
+        </div>
+
+        <!-- Hourly Rate Result -->
+        <div class="card">
+            <h2>💰 Real Hourly Wage</h2>
+            <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px;">
+                Companies often hide low hourly rates behind "high" monthly salaries.
+            </p>
+
+            <div class="result-box">
+                <div class="result-value" id="realHourly">0.00</div>
+                <div class="result-label">Your Real Hourly Rate</div>
+            </div>
+
+            <div class="comparison">
+                <div class="comp-item">
+                    <span>Standard (40h) Rate</span>
+                    <strong id="standardHourly" style="color: var(--success)">0.00</strong>
+                </div>
+                <div class="comp-item" style="text-align: right;">
+                    <span>Devaluation</span>
+                    <strong id="devaluation" style="color: var(--primary)">-0%</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Visualization -->
+        <div class="card full-width">
+            <h2>⏳ Your Life This Week <span class="badge" id="scheduleBadge">996</span></h2>
+            
+            <div class="legend">
+                <span><span class="dot" style="background:var(--primary)"></span>Work</span>
+                <span><span class="dot" style="background:var(--accent)"></span>Sleep (8h)</span>
+                <span><span class="dot" style="background:var(--success)"></span>Free Time</span>
+            </div>
+
+            <div class="bar-container">
+                <div class="bar-segment seg-work" id="barWork" style="width: 42%">42%</div>
+                <div class="bar-segment seg-sleep" id="barSleep" style="width: 33%">33%</div>
+                <div class="bar-segment seg-life" id="barLife" style="width: 25%">25%</div>
+            </div>
+
+            <div class="comparison">
+                <div class="comp-item">
+                    <strong><span id="totalWorkHours">72</span> hrs</strong>
+                    <span>Total Work/Commute</span>
+                </div>
+                <div class="comp-item" style="text-align: center;">
+                    <strong><span id="totalFreeHours">40</span> hrs</strong>
+                    <span>True Free Time</span>
+                </div>
+                <div class="comp-item" style="text-align: right;">
+                    <strong><span id="lifeLost">42</span>%</strong>
+                    <span>of Week Consumed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="card full-width">
+            <h2>🚑 The 996.ICU Concept</h2>
+            <p>
+                "996" refers to working from <strong>9:00 am</strong> to <strong>9:00 pm</strong>, <strong>6 days</strong> a week. 
+                <br><br>
+                Developers created the rhyme <em>"Work 996, sick in ICU"</em> to protest these brutal schedules. 
+                While a 996 schedule creates a 72-hour work week, labor laws in many places dictate a standard 40-44 hour week. 
+                Use this tool to see how much your time is actually being valued compared to a standard 9-5 job.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 996hrs.net | Generated for Educational Purposes
+    </div>
+</div>
+
+<script>
+    const inputs = document.querySelectorAll('input, select');
+    
+    // Config
+    const HOURS_IN_WEEK = 168;
+    const SLEEP_HOURS_DAY = 8;
+    const SLEEP_WEEK = SLEEP_HOURS_DAY * 7;
+    const WEEKS_IN_MONTH = 4.345; // Average weeks in a month
+
+    function calculate() {
+        // Get values
+        const salary = parseFloat(document.getElementById('salary').value) || 0;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const days = parseInt(document.getElementById('daysPerWeek').value);
+        const commuteMinutes = parseFloat(document.getElementById('commute').value) || 0;
+
+        // Parse Time
+        const start = new Date("01/01/2000 " + startTime);
+        const end = new Date("01/01/2000 " + endTime);
+        
+        let dailyWorkHours = (end - start) / 1000 / 60 / 60;
+        if (dailyWorkHours < 0) dailyWorkHours += 24; // Handle overnight
+
+        // Calculations
+        const weeklyWorkHours = dailyWorkHours * days;
+        const weeklyCommuteHours = (commuteMinutes / 60) * days;
+        const totalCommittedTime = weeklyWorkHours + weeklyCommuteHours;
+        
+        const monthlyWorkHours = weeklyWorkHours * WEEKS_IN_MONTH;
+
+        // Hourly Rates
+        const realHourlyRate = monthlyWorkHours > 0 ? (salary / monthlyWorkHours) : 0;
+        
+        // Standard comparison (40h week)
+        const standardMonthlyHours = 40 * WEEKS_IN_MONTH;
+        const standardHourlyRate = salary / standardMonthlyHours;
+        
+        const devaluation = standardHourlyRate > 0 
+            ? ((standardHourlyRate - realHourlyRate) / standardHourlyRate) * 100 
+            : 0;
+
+        // Visualization Data
+        const pctWork = (totalCommittedTime / HOURS_IN_WEEK) * 100;
+        const pctSleep = (SLEEP_WEEK / HOURS_IN_WEEK) * 100;
+        let pctLife = 100 - pctWork - pctSleep;
+        if(pctLife < 0) pctLife = 0; // Sanity check
+
+        // Update UI
+        document.getElementById('realHourly').innerText = realHourlyRate.toFixed(2);
+        document.getElementById('standardHourly').innerText = standardHourlyRate.toFixed(2);
+        document.getElementById('devaluation').innerText = "-" + devaluation.toFixed(1) + "%";
+
+        document.getElementById('totalWorkHours').innerText = totalCommittedTime.toFixed(1);
+        document.getElementById('totalFreeHours').innerText = ((pctLife / 100) * HOURS_IN_WEEK).toFixed(1);
+        document.getElementById('lifeLost').innerText = pctWork.toFixed(1);
+
+        // Update Bars
+        document.getElementById('barWork').style.width = pctWork + "%";
+        document.getElementById('barWork').innerText = Math.round(pctWork) + "%";
+        
+        document.getElementById('barSleep').style.width = pctSleep + "%";
+        document.getElementById('barSleep').innerText = Math.round(pctSleep) + "%";
+        
+        document.getElementById('barLife').style.width = pctLife + "%";
+        document.getElementById('barLife').innerText = Math.round(pctLife) + "%";
+
+        // Badge update
+        let badgeText = "Standard";
+        if(weeklyWorkHours > 60) badgeText = "996 / ICU";
+        else if(weeklyWorkHours > 45) badgeText = "Overtime";
+        document.getElementById('scheduleBadge').innerText = badgeText;
+        
+        // Color shifts based on severity
+        const rVal = document.getElementById('realHourly');
+        if(devaluation > 30) rVal.style.color = "#ff4757"; // Bad
+        else rVal.style.color = "#2ed573"; // Good
+    }
+
+    // Event Listeners
+    inputs.forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+
+    // Initial run
+    calculate();
+</script>
+
+</body>
+</html>
